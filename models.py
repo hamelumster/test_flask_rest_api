@@ -31,8 +31,8 @@ class Announcement(Base):
     created_at: Mapped[datetime] = mapped_column(nullable=False, func=datetime.now())
     owner: Mapped[str] = mapped_column(nullable=False)
 
-   @property
-   def to_dict(self):
+    @property
+    def to_dict(self):
         return {
             "id": self.id,
             "title": self.title,
