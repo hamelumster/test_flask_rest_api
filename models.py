@@ -28,6 +28,16 @@ class Announcement(Base):
     created_at: Mapped[datetime] = mapped_column(nullable=False, func=datetime.now())
     owner: Mapped[str] = mapped_column(nullable=False)
 
+   @property
+   def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "created_at": self.created_at.isoformat(),
+            "owner": self.owner
+        }
+
 Base.metadata.create_all(engine)
 
 atexit.register(engine.dispose)
