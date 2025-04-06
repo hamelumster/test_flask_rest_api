@@ -17,7 +17,10 @@ engine = create_engine(DSN)
 Session = sessionmaker(bind=engine)
 
 class Base(DeclarativeBase):
-    pass
+
+    @property
+    def id_dict(self):
+        return {"id": self.id}
 
 class Announcement(Base):
     __tablename__ = "announcements"
