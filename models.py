@@ -25,7 +25,8 @@ class Announcement(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(nullable=False)
     description: Mapped[str] = mapped_column(nullable=False)
-    regisration_time: Mapped[datetime] = mapped_column(nullable=False, func=datetime.now())
+    created_at: Mapped[datetime] = mapped_column(nullable=False, func=datetime.now())
+    owner: Mapped[str] = mapped_column(nullable=False)
 
 Base.metadata.create_all(engine)
 
