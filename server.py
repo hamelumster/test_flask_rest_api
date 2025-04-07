@@ -6,7 +6,9 @@ app = Flask("app")
 
 class AnnouncementView(MethodView):
     def get(self, announcement_id: int):
-        pass
+        with Session() as session:
+            announcement = session.get(Announcement, announcement_id)
+            return jsonify(announcement.id_dict)
     def post(self, announcement_id: int):
         json_data = request.json
         with Session() as session:
