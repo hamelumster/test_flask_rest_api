@@ -32,7 +32,7 @@ class User(Base):
     username: Mapped[str] = mapped_column(nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
 
-    announcements = relationship("announcements", back_populates="owner")
+    announcements = relationship("Announcement", back_populates="owner_relationship")
 
 
 class Announcement(Base):
