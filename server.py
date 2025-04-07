@@ -1,9 +1,22 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
 from flask.views import MethodView
 from models import Announcement, Session, User
 
 app = Flask("app")
 app.config["JSON_AS_ASCII"] = False
+
+@app.before_request
+def before_request():
+    with Session() as session:
+        request.session = session
+
+@app.after_request
+def after_request(response: Response):
+    request.session.close()
+    return response
+
+def error_handler(err: HttpError):
+    pass
 
 class UserView(MethodView):
     def get(self, user_id: int):
