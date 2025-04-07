@@ -61,7 +61,7 @@ class AnnouncementView(MethodView):
         owner_id = json_data.get("owner")
 
         user = request.session.get(User, owner_id)
-        if not User:
+        if not user:
             return jsonify({"status": "error", "message": "User not found"})
 
         announcement = Announcement(**json_data)
