@@ -23,22 +23,34 @@ class AnnouncementView(MethodView):
         with Session() as session:
             announcement = session.get(Announcement, announcement_id)
             return jsonify(announcement.id_dict)
+
     def post(self):
         json_data = request.json
         with Session() as session:
+            owner_id = json_data["owner"]
+            user = session.get(User, owner_id)
+            if not User:
+                return jsonify({"status": "error", "message": "User not found"})
+
             announcement = Announcement(**json_data)
             session.add(announcement)
             session.commit()
             return jsonify(announcement.id_dict)
+
     def delete(self, announcement_id: int):
         with Session() as session:
             announcement = session.get(Announcement, announcement_id)
+            if not announcement:
+                return jsonify({"status": "error", "message": "Announcement not found"})
             session.delete(announcement)
             session.commit()
             return jsonify({"status": "success"})
+
     def patch(self, announcement_id: int):
         with Session() as session:
             announcement = session.get(Announcement, announcement_id)
+            if not announcement:
+                return jsonify({"status": "error", "message": "Announcement not found"})
             json_data = request.json
             if "title" in json_data:
                 announcement.title = json_data["title"]
@@ -48,7 +60,11 @@ class AnnouncementView(MethodView):
             session.commit()
             return jsonify(announcement.id_dict)
 
+user_view = UserView.as_view("user_view")
 announcement_view = AnnouncementView.as_view("announcement_view")
+
+app.add_url_rule("/api/v1/user", view_func=user_view, methods=["POST"])
+
 app.add_url_rule("/api/v1/announcement", view_func=announcement_view, methods=["POST"])
 app.add_url_rule("/api/v1/announcement/<int:announcement_id>",
                  view_func=announcement_view,
