@@ -5,7 +5,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 
 from sqlalchemy import create_engine, func, DateTime, ForeignKey
-from sqlalchemy.orm import sessionmaker, DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import sessionmaker, DeclarativeBase, Mapped, mapped_column, relationship
 
 load_dotenv()
 
@@ -34,7 +34,7 @@ class User(Base):
     username: Mapped[str] = mapped_column(nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
 
-    announcements = mapped_column("announcements", back_populates="owner")
+    announcements = relationship("announcements", back_populates="owner")
 
 
 class Announcement(Base):
@@ -45,6 +45,8 @@ class Announcement(Base):
     description: Mapped[str] = mapped_column(nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, server_default=func.now())
     owner: Mapped[int] = mapped_column(ForeignKey("users.id"))
+
+    owner_relationship = relationship("User", back_populates="announcements")
 
     @property
     def to_dict(self):
