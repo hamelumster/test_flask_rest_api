@@ -1,8 +1,22 @@
 from flask import Flask, jsonify, request
 from flask.views import MethodView
-from models import Announcement, Session
+from models import Announcement, Session, User
 
 app = Flask("app")
+
+class UserView(MethodView):
+    def get(self, user_id: int):
+        with Session() as session:
+            user = session.get(User, user_id)
+            return jsonify(user.id_dict)
+
+    def post(self):
+        json_data = request.json
+        with Session() as session:
+            user = User(**json_data)
+            session.add(user)
+            session.commit()
+            return jsonify({"id": user.id, "username": user.username})
 
 class AnnouncementView(MethodView):
     def get(self, announcement_id: int):
