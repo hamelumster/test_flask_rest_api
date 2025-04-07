@@ -17,7 +17,11 @@ class AnnouncementView(MethodView):
             session.commit()
             return jsonify(announcement.id_dict)
     def delete(self, announcement_id: int):
-        pass
+        with Session() as session:
+            announcement = session.get(Announcement, announcement_id)
+            session.delete(announcement)
+            session.commit()
+            return jsonify({"status": "success"})
     def patch(self, announcement_id: int):
         with Session() as session:
             announcement = session.get(Announcement, announcement_id)
