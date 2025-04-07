@@ -35,8 +35,8 @@ class AnnouncementView(MethodView):
             return jsonify(announcement.id_dict)
 
 announcement_view = AnnouncementView.as_view("announcement_view")
-app.add_url_rule("api/v1/announcement", view_func=announcement_view, methods=["POST"])
-app.add_url_rule("api/v1/announcement/<int:announcement_id>",
+app.add_url_rule("/api/v1/announcement", view_func=announcement_view, methods=["POST"])
+app.add_url_rule("/api/v1/announcement/<int:announcement_id>",
                  view_func=announcement_view,
                  methods=["GET", "DELETE", "PATCH"]
 )
