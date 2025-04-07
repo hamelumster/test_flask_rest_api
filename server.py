@@ -1,5 +1,6 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask.views import MethodView
+from models import Announcement, Session
 
 app = Flask("app")
 
@@ -7,7 +8,12 @@ class AnnouncementView(MethodView):
     def get(self, announcement_id: int):
         pass
     def post(self, announcement_id: int):
-        pass
+        json_data = request.json
+        with Session() as session:
+            announcement = Announcement(**json_data)
+            session.add(announcement)
+            session.commit()
+            return jsonify(announcement.id_dict)
     def delete(self, announcement_id: int):
         pass
     def patch(self, announcement_id: int):
