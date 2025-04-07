@@ -41,4 +41,4 @@ app.add_url_rule("/api/v1/announcement/<int:announcement_id>",
                  methods=["GET", "DELETE", "PATCH"]
 )
 
-app.run()
+app.run(host="0.0.0.0", port=5000)
