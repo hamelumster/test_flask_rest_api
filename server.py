@@ -9,7 +9,7 @@ class AnnouncementView(MethodView):
         with Session() as session:
             announcement = session.get(Announcement, announcement_id)
             return jsonify(announcement.id_dict)
-    def post(self, announcement_id: int):
+    def post(self):
         json_data = request.json
         with Session() as session:
             announcement = Announcement(**json_data)
@@ -41,4 +41,4 @@ app.add_url_rule("/api/v1/announcement/<int:announcement_id>",
                  methods=["GET", "DELETE", "PATCH"]
 )
 
-app.run(host="0.0.0.0", port=5000)
+app.run()
