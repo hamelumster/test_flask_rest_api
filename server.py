@@ -19,7 +19,16 @@ class AnnouncementView(MethodView):
     def delete(self, announcement_id: int):
         pass
     def patch(self, announcement_id: int):
-        pass
+        with Session() as session:
+            announcement = session.get(Announcement, announcement_id)
+            json_data = request.json
+            if "title" in json_data:
+                announcement.title = json_data["title"]
+            if "description" in json_data:
+                announcement.description = json_data["description"]
+            session.add(announcement)
+            session.commit()
+            return jsonify(announcement.id_dict)
 
 announcement_view = AnnouncementView.as_view("announcement_view")
 app.add_url_rule("api/v1/announcement", view_func=announcement_view, methods=["POST"])
