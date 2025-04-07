@@ -3,6 +3,7 @@ from flask.views import MethodView
 from models import Announcement, Session, User
 
 app = Flask("app")
+app.config["JSON_AS_ASCII"] = False
 
 class UserView(MethodView):
     def get(self, user_id: int):
@@ -22,7 +23,12 @@ class AnnouncementView(MethodView):
     def get(self, announcement_id: int):
         with Session() as session:
             announcement = session.get(Announcement, announcement_id)
-            return jsonify(announcement.id_dict)
+            return jsonify(announcement.id_dict,
+                           announcement.title,
+                           announcement.description,
+                           announcement.created_at,
+                           announcement.owner,
+                           )
 
     def post(self):
         json_data = request.json
@@ -58,12 +64,17 @@ class AnnouncementView(MethodView):
                 announcement.description = json_data["description"]
             session.add(announcement)
             session.commit()
-            return jsonify(announcement.id_dict)
+            return jsonify(announcement.title,
+                           announcement.description,
+                           announcement.created_at,
+                           announcement.owner
+                           )
 
 user_view = UserView.as_view("user_view")
 announcement_view = AnnouncementView.as_view("announcement_view")
 
 app.add_url_rule("/api/v1/user", view_func=user_view, methods=["POST"])
+app.add_url_rule("/api/v1/user/<int:user_id>", view_func=user_view, methods=["GET"])
 
 app.add_url_rule("/api/v1/announcement", view_func=announcement_view, methods=["POST"])
 app.add_url_rule("/api/v1/announcement/<int:announcement_id>",
